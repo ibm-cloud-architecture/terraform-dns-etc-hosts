@@ -10,7 +10,7 @@ EOF
 
 
 resource "null_resource" "sync_etc_hosts" {
-  count = "${length(var.node_ips)}"
+  count = "${var.num_nodes}"
 
   triggers = {
       hosts = "${data.template_file.etc_hosts.rendered}"

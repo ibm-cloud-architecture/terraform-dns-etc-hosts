@@ -2,6 +2,10 @@ variable "bastion_ip_address" {
   default = ""
 }
 
+variable "num_nodes" {
+  default = 0
+}
+
 variable "node_ips" {
   type = "list"
   default = []
