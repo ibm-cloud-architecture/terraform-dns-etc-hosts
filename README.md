@@ -19,7 +19,7 @@ module "etchosts" {
     node_ips                = [<ip1>, <ip2>, <ip3>]
     node_hostnames          = [<hostname1>, <hostname2>, <hostname3>]
 
-    domain                  = "my-domain.com
+    domain                  = "my-domain.com"
 
 }
 ```
