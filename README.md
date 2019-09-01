@@ -6,7 +6,7 @@ This terraform module is intended to generate `/etc/hosts` across a set of machi
 
 ```
 module "etchosts" {
-    source = "github.com/ibm-cloud-architecture/terraform-dns-etc-hosts.git?ref=1.1"
+    source = "github.com/ibm-cloud-architecture/terraform-dns-etc-hosts.git?ref=v1.1"
 
     bastion_ip_address      = "<bastion host ip address>"
     bastion_ssh_user        = "<ssh username>"
