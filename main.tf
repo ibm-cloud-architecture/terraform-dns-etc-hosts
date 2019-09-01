@@ -18,11 +18,16 @@ resource "null_resource" "sync_etc_hosts" {
 
   connection {
     type = "ssh"
-    host = "${element(var.node_ips, count.index)}"
-    user = "${var.ssh_user}"
-    private_key = "${file(var.ssh_private_key)}"
-    bastion_host = "${var.bastion_ip_address}"
-    bastion_host_key = "${file(var.ssh_private_key)}"
+
+    host        = "${element(var.node_ips, count.index)}"
+    user        = "${var.ssh_user}"
+    password    = "${var.ssh_password}"
+    private_key = "${var.ssh_private_key}"
+
+    bastion_host        = "${var.bastion_ip_address}"
+    bastion_user        = "${var.bastion_ssh_user}"
+    bastion_password    = "${var.bastion_ssh_password}"
+    bastion_private_key = "${var.bastion_ssh_private_key}"
   }
 
   provisioner "file" {
@@ -30,17 +35,16 @@ resource "null_resource" "sync_etc_hosts" {
     destination = "/tmp/etc_hosts"
   }
 
+  provisioner "file" {
+    source      = "${path.module}/scripts/sync_etc_hosts.sh"
+    destination = "/tmp/sync_etc_hosts.sh"
+  }
+
   provisioner "remote-exec" {
     inline = [
-      "set -x",
-      "if [ ! -f /etc/hosts.orig ]; then sudo cp /etc/hosts /etc/hosts.orig; fi",
-      "sudo sed -i '/${element(var.node_hostnames, count.index)}/d' /etc/hosts",
-      "for i in `cat /tmp/etc_hosts | awk '{print $$1;}'`; do sudo sed -i '/^'$$i' /d' /etc/hosts; done",
-      "cat /tmp/etc_hosts | sudo tee -a /etc/hosts",
-      "sudo test -e /etc/cloud/templates/hosts.redhat.tmpl && sudo sed -i '/{{fqdn}}/d' /etc/cloud/templates/hosts.redhat.tmpl",
-      "sudo test -e /etc/cloud/templates/hosts.redhat.tmpl && sudo sed -i '/${element(var.node_hostnames, count.index)}/d' /etc/cloud/templates/hosts.redhat.tmpl",
-      "sudo test -e /etc/cloud/templates/hosts.redhat.tmpl && for i in `cat /tmp/etc_hosts | awk '{print $$1;}'`; do sudo sed -i '/^'$$i' /d' /etc/cloud/templates/hosts.redhat.tmpl; done",
-      "sudo test -e /etc/cloud/templates/hosts.redhat.tmpl && cat /tmp/etc_hosts | sudo tee -a /etc/cloud/templates/hosts.redhat.tmpl"
+      "chmod +x /tmp/sync_etc_hosts.sh",
+      "sudo /tmp/sync_etc_hosts.sh",
+      "rm -f /tmp/sync_etc_hosts.sh"
     ]
   }
 }
