@@ -43,3 +43,9 @@ variable "node_hostnames" {
 variable "domain" {
   type = "string"
 }
+
+variable "dependson" {
+    type = "list"
+    default = []
+}
+
