@@ -1,0 +1,8 @@
+---
+  - name: Clean up /etc/hosts
+    lineinfile:
+      dest: /etc/hosts
+      regexp: '.*{{ item }}'
+      state: absent
+    with_items:
+      - "{{ groups['all'] }}"

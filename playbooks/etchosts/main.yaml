@@ -1,0 +1,7 @@
+---
+- hosts: all
+  tasks:
+  - name: Cleanup /etc/hosts on all nodes
+    include: tasks/cleanup.yaml
+  - name: Generate /etc/hosts on all nodes
+    include: tasks/generate.yaml

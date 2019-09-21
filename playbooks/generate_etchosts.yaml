@@ -1,0 +1,2 @@
+---
+- import_playbook: etchosts/main.yaml
